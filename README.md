@@ -1,1 +1,1 @@
-# AI-document-assistant-storage
+# AI-document-assistant
