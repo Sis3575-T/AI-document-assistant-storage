@@ -13,7 +13,7 @@ The system is designed to help users securely manage, protect, understand, and r
 The platform combines:
 
 - Web application
-- Desktop backup agent
+- Mobile application
 - AI processing service
 - Secure storage
 - Intelligent document management
@@ -40,7 +40,7 @@ The system includes:
 
 - User management
 - Secure file vault
-- Desktop file synchronization
+- Mobile file synchronization
 - AI document analysis
 - Smart search
 - Document chat
@@ -61,7 +61,6 @@ A normal user can:
 - Create an account
 - Login/logout
 - Connect devices
-- Select folders for protection
 - Upload files
 - View files
 - Download files
@@ -121,6 +120,7 @@ Features:
 - Email/password login
 - JWT authentication
 - Session management
+- Biometric authentication (mobile)
 
 
 ---
@@ -209,7 +209,7 @@ The system shall store:
 
 ---
 
-# Module 3: Desktop Agent
+# Module 3: Mobile Application
 
 
 ## FR-007 Device Connection
@@ -219,43 +219,40 @@ The user shall connect personal devices.
 The system shall store:
 
 - Device name
-- Operating system
+- Operating system (iOS/Android)
 - Last connection time
+- Push notification token
 
 
 ---
 
-## FR-008 Folder Permission
+## FR-008 Camera & Gallery Access
 
-The desktop application shall request permission.
+The mobile application shall request permission to access camera and photo library.
 
 Example:
 
 ```
-Select folders:
-
-✓ Documents
-
-✓ Pictures
-
-✓ Projects
-
+Allow AI Vault to access:
+✓ Camera (for document scanning)
+✓ Photo Library (for importing documents)
 ```
 
-Only selected folders can be accessed.
+Only permitted sources can be accessed.
 
 
 ---
 
-## FR-009 File Scanner
+## FR-009 Document Scanning
 
-The desktop agent shall scan selected folders.
+The mobile app shall scan documents using the camera.
 
-It shall detect:
+It shall provide:
 
-- New files
-- Updated files
-- Deleted files
+- Auto-crop and perspective correction
+- Image enhancement
+- Multi-page scanning
+- OCR processing (on-device or cloud)
 
 
 ---
@@ -452,6 +449,7 @@ Notification methods:
 
 - Email
 - Push notification
+- In-app notification
 
 
 ---
@@ -507,11 +505,11 @@ Example:
 ```
 Degree
 
- |
+  |
 
 CV
 
- |
+  |
 
 Employment Contract
 ```
@@ -609,11 +607,19 @@ The interface should:
 # 7. Technology Requirements
 
 
-## Frontend
+## Frontend (Web)
 
 - React
 - TypeScript
 - Tailwind CSS
+
+
+## Mobile Application
+
+- React Native
+- Expo
+- TypeScript
+- Expo Router
 
 
 ## Backend
@@ -634,11 +640,6 @@ The interface should:
 - FastAPI
 - Gemini API
 - Tesseract OCR
-
-
-## Desktop Application
-
-- Electron
 
 
 ## Storage
@@ -686,7 +687,6 @@ The system depends on:
 
 Possible future improvements:
 
-- Android application
 - Voice assistant
 - Face authentication
 - Blockchain verification

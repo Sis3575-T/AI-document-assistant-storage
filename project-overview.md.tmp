@@ -136,42 +136,43 @@ The system works using:
                 User
 
                  |
-         -----------------
-         |               |
-         ▼               ▼
+                 |
 
-Web Application      Mobile Application
-React                React Native + Expo
+        Web Application
+             React
 
-         |               |
-         -----------------
-                  |
-                  ▼
+                 |
+                 |
 
-           Backend API
-           Node.js
+          Backend API
+          Node.js
 
-         -----------------
+        -----------------
 
-         |               |
+        |               |
 
-         ▼               ▼
+ PostgreSQL        AI Service
+ Database          Python
 
-  PostgreSQL        AI Service
-  Database          Python
+                    |
 
-                     |
-        ┌────────────┼────────────┐
-        ▼            ▼            ▼
-     Gemini     Tesseract     pgvector
+              Gemini + OCR
 
 
-Mobile Application
+                 |
 
-React Native + Expo
+          Cloud Storage
 
-         |
-  User Device Files
+
+
+Desktop Agent
+
+Electron Application
+
+        |
+
+ User Computer Files
+
 ```
 
 ---
@@ -202,47 +203,48 @@ Technology:
 
 ---
 
-# 6.2 Mobile Application
+# 6.2 Desktop Agent
 
-A mobile application installed on the user's device.
+A desktop application installed on the user's device.
 
 Technology:
 
-- React Native
-- Expo
-- TypeScript
+- Electron
+- Node.js
+- React
 
 
 Responsibilities:
 
 - Request user permission
-- Camera/OCR document scanning
+- Scan selected folders
 - Detect file changes
 - Upload selected files
 - Synchronize data
 - Work offline
-- Push notifications
-- Biometric authentication
 
 
 Example:
 
 ```
-User Device
+User Computer
 
 Documents
-Camera
-Photos
+Pictures
+Projects
 
-        |
-        ↓
+       |
 
-AI Vault Mobile App
+       ↓
 
-        |
-        ↓
+AI Vault Desktop Agent
+
+       |
+
+       ↓
 
 Backend Server
+
 ```
 
 ---
@@ -457,6 +459,7 @@ CV
        ↓
 
 Job Application
+
 ```
 
 
@@ -487,6 +490,7 @@ Important Documents
 ✓ Passport
 ✓ Medical Information
 ✓ Certificates
+
 ```
 
 ---
@@ -539,6 +543,7 @@ The main goals are:
 
 Possible future features:
 
+- Mobile application
 - Voice assistant
 - Face authentication
 - Blockchain document verification

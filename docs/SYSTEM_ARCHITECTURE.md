@@ -9,7 +9,7 @@ This document describes the complete technical architecture of the AI Personal D
 The system is designed as a distributed platform consisting of:
 
 - Web Application
-- Desktop Agent
+- Mobile Application
 - Backend API
 - AI Processing Service
 - Database System
@@ -24,51 +24,51 @@ The architecture allows users to securely manage personal data while using artif
 The system follows a multi-service architecture.
 
 ```
-                         USER
+                          USER
 
-                           |
-          --------------------------------
-          |                              |
-          ↓                              ↓
+                            |
+           --------------------------------
+           |                              |
+           ↓                              ↓
 
-   Web Application                 Desktop Agent
+   Web Application                 Mobile Application
 
-   React + TypeScript              Electron
+   React + TypeScript              React Native + Expo
 
-          |                              |
-          |                              |
-          --------------------------------
+           |                              |
+           |                              |
+           --------------------------------
 
-                         |
+                          |
 
-                         ↓
+                          ↓
 
-                  Backend API
+                   Backend API
 
-               Node.js + Express
+                Node.js + Express
 
-                         |
+                          |
 
-        ---------------------------------
+         ---------------------------------
 
-        |                               |
+         |                               |
 
-        ↓                               ↓
-
-
- PostgreSQL Database              Storage Service
+         ↓                               ↓
 
 
-        |
-
-        ↓
+  PostgreSQL Database              Storage Service
 
 
-    AI Service
+         |
+
+         ↓
+
+
+     AI Service
 
  Python + FastAPI
 
-        |
+         |
 
  -----------------------------
 
@@ -139,7 +139,73 @@ pages/
 
 ---
 
-# 3.2 Backend API
+# 3.2 Mobile Application
+
+## Purpose
+
+The mobile application provides on-the-go access to the AI Vault system, including document scanning via camera, offline access, push notifications, and biometric authentication.
+
+## Technology
+
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- Zustand
+- React Query
+- expo-camera
+- expo-image-picker
+- expo-notifications
+- expo-secure-store
+- expo-local-authentication
+
+
+## Responsibilities
+
+The mobile app handles:
+
+- User authentication (including biometric)
+- Document scanning via camera/OCR
+- File upload and management
+- Offline access to cached documents
+- Push notifications
+- AI chat interface
+- Settings management
+
+
+## App Structure
+
+```
+apps/mobile/
+
+├── app/                  # Expo Router screens (file-based routing)
+│   ├── (auth)/           # Auth screens (login, register)
+│   ├── (tabs)/           # Main tab screens
+│   ├── files/            # File management screens
+│   ├── chat/             # AI chat screens
+│   └── _layout.tsx       # Root layout
+├── components/           # Reusable UI components
+│   ├── ui/               # Primitives (Button, Input, Card)
+│   ├── layout/           # Header, TabBar, Drawer
+│   └── features/         # Feature-specific components
+├── stores/               # Zustand state stores
+├── services/             # API clients and native module wrappers
+├── hooks/                # Custom React hooks
+├── types/                # TypeScript type definitions
+├── utils/                # Helper functions
+├── constants/            # App constants, theme, config
+├── assets/               # Images, fonts, icons
+├── app.json              # Expo config
+├── eas.json              # EAS Build config
+├── tailwind.config.js    # NativeWind config
+├── tsconfig.json
+└── package.json
+
+```
+
+---
+
+# 3.3 Backend API
 
 
 ## Purpose
@@ -194,136 +260,95 @@ src/
 
 ---
 
-# 3.3 Desktop Agent
+# 4. Mobile Application Workflow
 
 
-## Purpose
-
-The desktop application connects the user's computer with the AI Vault system.
-
-## Technology
-
-- Electron
-- React
-- Node.js
+## Step 1: User Authentication
 
 
-## Why Electron?
-
-A browser cannot directly access personal computer files.
-
-Electron allows the application to:
-
-- Read selected folders
-- Monitor changes
-- Synchronize files
-- Work offline
-
-
-## Desktop Structure
-
+User opens:
 
 ```
-desktop-agent/
+AI Vault Mobile App
+```
 
+Login options:
 
-src/
+```
+Email/Password
+Biometric (Face ID / Fingerprint)
+```
 
-├── main/
+The application receives:
 
-│    ├── main.ts
-
-│    ├── scanner.ts
-
-│    ├── sync.ts
-
-│    └── security.ts
-
-
-├── renderer/
-
-│    └── React UI
-
-
-└── storage/
-
+```
+JWT Token
+Refresh Token
 ```
 
 ---
 
-# 4. Desktop Agent Workflow
+## Step 2: Device Registration
 
 
-## Step 1: User Permission
-
-
-```
-User opens AI Vault Agent
-
-        |
-
-Select folders
-
-        |
-
-Allow access
+After login:
 
 ```
-
-
----
-
-## Step 2: File Scanning
-
-
-```
-Documents Folder
-
-      |
-
-Scanner Service
-
-      |
-
-Collect:
-
-- Name
-- Size
-- Type
-- Location
-- Modified Date
-
-```
-
----
-
-## Step 3: Synchronization
-
-
-```
-Detected File
-
+Mobile App
        |
-
-Check Changes
-
-       |
-
-Encrypt File
-
-       |
-
-Upload
-
-       |
-
+       ↓
 Backend
+       |
+       ↓
+Create Device Record
+```
 
+Stored information:
+
+```
+Device Name
+Operating System (iOS/Android)
+Last Active Time
+Device ID
+Push Token
 ```
 
 ---
 
-# 5. Backend Architecture
+# 5. Document Scanning & Upload
+
+
+## Camera Scanning
+
+```
+User opens camera
+       |
+Scan document
+       |
+Auto-crop & enhance
+       |
+OCR Processing (on-device or cloud)
+       |
+Preview & confirm
+       |
+Upload to backend
+```
+
+## Gallery Import
+
+```
+Select from gallery
+       |
+Image processing
+       |
+OCR extraction
+       |
+Upload to backend
+```
+
+---
+
+# 6. Backend Architecture
 
 
 ## Request Flow
@@ -331,36 +356,23 @@ Backend
 
 ```
 User Action
-
       |
-
-Frontend
-
+Mobile App / Web App
       |
-
 API Request
-
       |
-
 Express Router
-
       |
-
 Controller
-
       |
-
 Service Layer
-
       |
-
 Database
-
 ```
 
 ---
 
-# 6. Database Architecture
+# 7. Database Architecture
 
 
 ## Database Technology
@@ -378,42 +390,26 @@ Prisma
 
 ```
 Users
-
    |
-
    |
-
 Devices
-
    |
-
    |
-
 Files
-
    |
-
    |
-
 Documents
-
    |
-
    |
-
 AI Analysis
-
    |
-
    |
-
 Notifications
-
 ```
 
 ---
 
-# 7. AI Service Architecture
+# 8. AI Service Architecture
 
 
 ## Purpose
@@ -434,38 +430,37 @@ Architecture:
 
 
 ```
-                 Document
+                  Document
 
-                    |
+                     |
 
-                    ↓
+                     ↓
 
-              AI Processing API
+               AI Processing API
 
-                    |
+                     |
 
-       -----------------------------
+        -----------------------------
 
-       |             |             |
+        |             |             |
 
-      OCR        AI Model     Embedding
+       OCR        AI Model     Embedding
 
-       |             |             |
+        |             |             |
 
-       -----------------------------
+        -----------------------------
 
-                    |
+                     |
 
-                    ↓
+                     ↓
 
-              Stored Knowledge
+               Stored Knowledge
 
 ```
 
-
 ---
 
-# 8. Document Processing Pipeline
+# 9. Document Processing Pipeline
 
 
 ## Upload Process
@@ -474,41 +469,40 @@ Architecture:
 ```
 User Uploads File
 
-        |
+         |
 
-        ↓
+         ↓
 
 File Storage
 
-        |
+         |
 
-        ↓
+         ↓
 
 OCR Extraction
 
-        |
+         |
 
-        ↓
+         ↓
 
 Text Processing
 
-        |
+         |
 
-        ↓
+         ↓
 
 AI Analysis
 
-        |
+         |
 
-        ↓
+         ↓
 
 Database Storage
-
 ```
 
 ---
 
-# 9. AI Chat Architecture
+# 10. AI Chat Architecture
 
 
 User:
@@ -525,30 +519,24 @@ Process:
 Question
 
    |
-
 AI Chat Service
 
    |
-
 Search Document Knowledge
 
    |
-
 Find Relevant Data
 
    |
-
 Gemini AI
 
    |
-
 Answer
-
 ```
 
 ---
 
-# 10. Storage Architecture
+# 11. Storage Architecture
 
 
 ## Development Storage
@@ -577,22 +565,18 @@ Storage flow:
 File
 
  |
-
 Encryption
 
  |
-
 Storage
 
  |
-
 Metadata saved in PostgreSQL
-
 ```
 
 ---
 
-# 11. Security Architecture
+# 12. Security Architecture
 
 
 ## Authentication
@@ -602,17 +586,13 @@ Metadata saved in PostgreSQL
 User Login
 
      |
-
 Password Hash
 
      |
-
 JWT Token
 
      |
-
 Access Granted
-
 ```
 
 
@@ -632,7 +612,7 @@ Files are protected using:
 
 ---
 
-# 12. Notification Architecture
+# 13. Notification Architecture
 
 
 Notification types:
@@ -650,11 +630,9 @@ Flow:
 System Event
 
       |
-
 Notification Service
 
       |
-
 -------------------
 
 Email
@@ -662,12 +640,11 @@ Email
 Push
 
 In-App
-
 ```
 
 ---
 
-# 13. Communication Between Services
+# 14. Communication Between Services
 
 
 ## Frontend → Backend
@@ -682,8 +659,20 @@ HTTPS
 
 ---
 
-## Backend → AI Service
+## Mobile App → Backend
 
+Protocol:
+
+```
+REST API
+HTTPS
+WebSocket for real-time updates
+```
+
+
+---
+
+## Backend → AI Service
 
 Protocol:
 
@@ -693,66 +682,42 @@ HTTP API
 JSON
 ```
 
-
 ---
 
-## Desktop → Backend
-
-
-Protocol:
-
-```
-Secure API
-
-WebSocket for sync
-
-```
-
----
-
-# 14. Deployment Architecture
+# 15. Deployment Architecture
 
 
 Production:
 
 
 ```
-                 Users
+                  Users
 
-                   |
+                    |
 
-                   ↓
+                    ↓
 
-              Frontend Server
+              Frontend Server (Web)
 
-                   |
+                    |
+         -------------------------
+         |                       |
+         ↓                       ↓
+Backend Server            Mobile App (App Store/Play Store)
+         |
+         ---------------------
+         |                   |
+     PostgreSQL          AI Server
+                             |
+                          Gemini API
 
-                   ↓
-
-              Backend Server
-
-                   |
-
-        ---------------------
-
-        |                   |
-
-    PostgreSQL          AI Server
-
-                            |
-
-                         Gemini API
-
-
-                   |
-
+                    |
               Cloud Storage
-
 ```
 
 ---
 
-# 15. Scalability Plan
+# 16. Scalability Plan
 
 
 Future improvements:
@@ -785,7 +750,7 @@ For:
 
 ---
 
-# 16. Final Architecture Summary
+# 17. Final Architecture Summary
 
 
 The system contains:
@@ -794,7 +759,7 @@ The system contains:
 | Component | Technology |
 |-|-|
 | Web Application | React + TypeScript |
-| Desktop Agent | Electron |
+| Mobile Application | React Native + Expo |
 | Backend | Node.js + Express |
 | Database | PostgreSQL |
 | ORM | Prisma |
@@ -811,4 +776,4 @@ The system contains:
 
 This architecture allows the AI Personal Digital Assistant to work as a complete personal data management platform.
 
-The combination of Electron, AI, secure storage, and intelligent document processing makes the system different from traditional cloud storage applications.
+The combination of React Native, AI, secure storage, and intelligent document processing makes the system different from traditional cloud storage applications.

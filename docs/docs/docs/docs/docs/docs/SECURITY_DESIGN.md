@@ -461,10 +461,10 @@ expires after time
 
 ---
 
-# 7. Desktop Agent Security
+# 7. Mobile Application Security
 
 
-The Electron application must protect user devices.
+The Mobile Application must protect user devices.
 
 
 ---

@@ -9,7 +9,7 @@ This document defines the backend API structure for the AI Personal Digital Assi
 The API connects:
 
 - Web Application
-- Electron Desktop Agent
+- Mobile Application
 - AI Service
 - Database
 - Storage System
@@ -212,7 +212,7 @@ PUT /users/profile
 
 # 6. Device APIs
 
-Used by Electron Desktop Agent.
+Used by Mobile Application.
 
 
 # 6.1 Register Device
@@ -417,10 +417,10 @@ Response:
 
 ---
 
-# 9. Desktop Synchronization APIs
+# 9. Mobile Synchronization APIs
 
 
-Used by Electron application.
+Used by Mobile Application.
 
 
 # 9.1 Scan File Information
